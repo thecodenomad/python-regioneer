@@ -24,7 +24,26 @@
     :license: MIT, see LICENSE for more details
 """
 
+from abc import ABC, abstractmethod
+from regioneer.core.hints import LocalityHint, NetworkHint, PhysicalHint, constants
+
+
 class LocationHint(object):
     """ This is the abstract LocationHint object that is meant only as an interface """
-    pass
+
+    def factory(hint_type, requirements):
+        """ Determine which type of hint we need instantiated """
+        if hint_type == constants.LOCALITY:
+            return LocalityHint(requirements)
+        if hint_type == constants.NETWORK:
+            return NetworkHint(requirements)
+        if hint_type == constants.PHYSICAL:
+            return PhysicalHint(requirements)
+
+    factory = staticmethod(factory)
+
+    @abstractmethod
+    def is_location(self):
+        """ Abstract method that should be implemented in all subclasses, erroring out if not available """
+        pass
 

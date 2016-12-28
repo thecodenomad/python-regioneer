@@ -1,11 +1,11 @@
 # coding: utf-8
 """
-    core.hints.LocatityHint
+    core.hints.PhysicalHint
     ~~~~~~~~~~~~~
 
-    A LocalityHint is subclass of the LocationHint object.
+    A PhysicalHint is subclass of the LocationHint object.
 
-    Requirements: geoclue
+    Requirements: /dev/<path>
 
     :copyright: 2016 Ray Gomez (codenomad@gmail.com), see AUTHORS for more details
     :license: MIT, see LICENSE for more details
@@ -14,11 +14,11 @@
 from regioneer.core.hints import LocationHint
 
 
-class LocalityHint(LocationHint):
+class PhysicalHint(LocationHint):
     """ This is a subclass of the LocationHint object that focuses specifically on determining a location based on
     physical locality of the user (ie GPS).
     """
 
-    def __init__(self, payload):
+    def __init__(self, requirements):
         super(LocationHint, self).__init__()
-        self.payload = payload
+        self.requirements = requirements

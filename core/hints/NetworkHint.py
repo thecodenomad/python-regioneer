@@ -20,12 +20,18 @@ class NetworkHint(LocationHint):
     network based requirements.
     """
 
-    def __init__(self, payload=constants.NETWORK_HINT_PAYLOAD):
+    def __init__(self, requirements=constants.NETWORK_HINT_REQS):
         super(LocationHint, self).__init__()
         self._device = payload[constants.DEVICE]
         self._device_type = payload[constants.DEVICE_TYPE]
         self._connected_ssid = payload[constants.CONNECTED_SSID]
         self._surroundsing_ssids = payload[constants.SURROUNDING_SSIDS]
+        self._requirements = requirements
+
+    @property
+    def payload(self):
+        """ Payload of the hint """
+        return self._payload
 
     @property
     def device(self):

@@ -1,8 +1,10 @@
 """ The purpose of this module is to test the NetworkHint object """
 
+import pytest
 from mock import MagicMock
 
-class TestNetworkHint:
+
+class TestNetworkHint(pytest.unittest):
     """ Test the NetworkHint object"""
 
     def setup(self):

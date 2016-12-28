@@ -15,7 +15,7 @@ CONNECTED_SSID="connected_ssid"
 SURROUNDING_SSIDS="surrounding_ssids"
 
 
-NETWORK_HINT_PAYLOAD = {
+NETWORK_HINT_REQS = {
 
     # Physical device, prefered HWID information
     DEVICE: None,
@@ -29,3 +29,10 @@ NETWORK_HINT_PAYLOAD = {
     # The surrounding networks (ie everything != connected_ssid if it exists, else all ssids)
     SURROUNDING_SSIDS: []
 }
+
+# Define Supported types of hints
+
+LOCALITY = 'locality'
+NETWORK = 'network'
+PHYSICAL = 'physical'
+

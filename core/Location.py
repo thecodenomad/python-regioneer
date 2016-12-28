@@ -13,8 +13,8 @@
 
 
 
-Location <user specified pulled from .json config file>
-
-< Profile Name >: Cannot be null
-< list: hint >: list of 'hints' that are user specified
-< creation date >: when location was created
+# Location <user specified pulled from .json config file>
+#
+# < Profile Name >: Cannot be null
+# < list: hint >: list of 'hints' that are user specified
+# < creation date >: when location was created
