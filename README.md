@@ -12,34 +12,33 @@ Solution: Define a profile for 'work' and allow the execution of system modifica
 
 ## Requirements:
 
-# GPS
-..* % variance <user specified>
-# Provider <geoclue 1 / geoclue 2>
-..* Need check existence of geo clue
-..* Fallback: google location based IP
-# Connected Wifi
-..* Surrounding Wifi Networks
-..* Connected Wifi Network
-# Connected eth
-..* Device
-..* Must have IP
-..* Pingable network location <public/private>
-..* Public <Default: Google, opt: (user specified) >
-..* Private <user specified>
+* GPS
+    * % variance <user specified>
+    * Provider <geoclue 1 / geoclue 2>
+        * Need check existence of geo clue
+        * Fallback: google location based IP
+* Connected Wifi
+    * Surrounding Wifi Networks
+    * Connected Wifi Network
+* Connected eth
+    * Device
+    * Must have IP
+    * Pingable network location <public/private>
+    * Public <Default: Google, opt: (user specified) >
+    * Private <user specified>
 
-Existence of specific ephemeral object
-Pingable public server
-Pingable private server
-Attached device
-Keyboard
-Monitors
-Mice
-Printers
-Hard drives
-Custom
-Must specify specific device ID
+* Existence of specific ephemeral object
+    * Pingable server (public or private, preferred: private)
+    * Attached device
+    * Keyboard
+    * Monitors
+    * Mice
+    * Printers
+    * Hard drives
+    * Custom
+        * Must specify specific device ID
 
 
-What actions are available:
+# What actions are available:
 
 For the initial alpha release, this will just provide an entry for invoking a user specified script.
