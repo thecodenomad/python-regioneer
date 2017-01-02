@@ -9,16 +9,32 @@
     :license: MIT, see LICENSE for more details
 """
 
-DEVICE="device"
+################################################
+# Define the requirements of each type of hint #
+################################################
+
+LOCALITY = 'locality'
+NETWORK  = 'network'
+PHYSICAL = 'physical'
+
+##########################
+# Network Hint specifics #
+##########################
+
+# /dev/<path> location
+NET_DEVICE="device"
+
+# Valid network device types: [eth, network]
 DEVICE_TYPE="device_type"
+
+# SSID specifics
 CONNECTED_SSID="connected_ssid"
 SURROUNDING_SSIDS="surrounding_ssids"
-
 
 NETWORK_HINT_REQS = {
 
     # Physical device, prefered HWID information
-    DEVICE: None,
+    NET_DEVICE: None,
 
     # Ethernet / WiFi
     DEVICE_TYPE: None,
@@ -30,9 +46,31 @@ NETWORK_HINT_REQS = {
     SURROUNDING_SSIDS: []
 }
 
-# Define Supported types of hints
+###########################
+# Locality Hint specifics #
+###########################
 
-LOCALITY = 'locality'
-NETWORK = 'network'
-PHYSICAL = 'physical'
+GPS_COORDINATES = "gps_coords"
+GPS_PROVIDER = "gps_provider"
+
+LOCALITY_HINT_REQS = {
+
+    # Tuple form of GPS coordinates as google would understand
+    GPS_COORDINATES:None,
+
+    # GPS provider
+    GPS_PROVIDER: "geoclue"
+}
+
+###########################
+# Physical Hint specifics #
+###########################
+
+ATTACHED_DEVICE = "attached_device"
+
+PHYSICAL_HINT_REQS = {
+
+    # Physical device, prefered HWID information
+    ATTACHED_DEVICE: None,
+}
 

@@ -11,7 +11,7 @@
     :license: MIT, see LICENSE for more details
 """
 
-from regioneer.core.hints import LocationHint
+from regioneer.core.hints.abstractions import LocationHint
 
 
 class PhysicalHint(LocationHint):
@@ -20,5 +20,10 @@ class PhysicalHint(LocationHint):
     """
 
     def __init__(self, requirements):
-        super(LocationHint, self).__init__()
+        LocationHint.__init__(self)
         self.requirements = requirements
+
+    def is_location(self):
+        """ Abstract method that should be implemented in all subclasses, erroring out if not available """
+        pass
+
