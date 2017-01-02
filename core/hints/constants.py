@@ -9,6 +9,8 @@
     :license: MIT, see LICENSE for more details
 """
 
+HINT_TYPE = "hint_type"
+
 ################################################
 # Define the requirements of each type of hint #
 ################################################

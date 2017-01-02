@@ -11,3 +11,9 @@
     :license: MIT, see LICENSE for more details
 """
 
+def learning_enabled(func):
+    def wrapper(input):
+
+        return func(intput)
+    return wrapper
+

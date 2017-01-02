@@ -25,7 +25,7 @@
     :license: MIT, see LICENSE for more details
 """
 
-from regioneer.core.hints import constants
+from regioneer.core.hints import constants, ping_check
 from regioneer.core.hints.abstractions import LocationHint
 
 class NetworkHint(LocationHint):
@@ -58,6 +58,7 @@ class NetworkHint(LocationHint):
 
     def ethernet_check(self, device):
         """ Check ethernet """
+        # Need to check to see if the device 
 
     def wifi_check(self, device):
         """ Check wifi """

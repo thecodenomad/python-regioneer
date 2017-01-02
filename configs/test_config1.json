@@ -1,3 +1,21 @@
 {
-  "locations": []
+  "profiles": [
+    {
+      "HomeEthernet": {
+        "network_hint": {
+          "ephemeral": false
+        }
+      },
+      "HomeWifi": [
+        {
+          "hint_type": "network_hint",
+          "ephemeral": false,
+          "net_device": "wlp1s0",
+          "device_type": "wifi"
+          "public_servers": [("www.google.com", None)]
+          "private_servers": [("192.168.10.1", None)]
+        }
+      ]
+    }
+  ]
 }
