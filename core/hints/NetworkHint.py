@@ -22,6 +22,8 @@
         is_location: For now we should only need to implement the network_check, there maybe more checks not related
                      to networking that could go here.
 
+        get_connected_ssid: There needs to be an abstraction as to which utilities are used to query for the ssid
+
     :copyright: 2016 Ray Gomez (codenomad@gmail.com), see AUTHORS for more details
     :license: Apache 2.0, see LICENSE for more details
 """
