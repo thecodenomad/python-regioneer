@@ -38,6 +38,7 @@ from regioneer.core.utils import networking
 
 from subprocess import check_output
 
+
 class NetworkHint(LocationHint):
     """ This is a subclass of the LocationHint that determines a location based on network based requirements. """
 

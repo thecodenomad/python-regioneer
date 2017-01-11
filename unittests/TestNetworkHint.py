@@ -12,6 +12,7 @@ from regioneer.core.hints.PhysicalHint import PhysicalHint
 
 from regioneer.unittests.constants import TEST_WIFI_REQS, TEST_ETHERNET_REQS, TEST_WIFI_SSID
 
+
 class TestLocationHint(unittest.TestCase):
     """ Test the NetworkHint object"""
 
@@ -47,4 +48,11 @@ class TestWiFiHint(unittest.TestCase):
         print("Constant gives: {}".format(TEST_WIFI_SSID))
 
         self.assertTrue( ssid == TEST_WIFI_SSID )
+
+
+class TestEthernetHint(unittest.TestCase):
+    """ Test teh subclassed EthernetHint """
+
+    def test_network_check(self):
+        """ Test the implementation of the NetworkHint abstract method """
 
