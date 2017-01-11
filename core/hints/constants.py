@@ -6,7 +6,7 @@
     LocationHint specific constants
 
     :copyright: 2016 Ray Gomez (codenomad@gmail.com), see AUTHORS for more details
-    :license: MIT, see LICENSE for more details
+    :license: Apache 2.0, see LICENSE for more details
 """
 
 HINT_TYPE = "hint_type"
@@ -39,13 +39,8 @@ NETWORK_HINT_REQS = {
     NET_DEVICE: None,
 
     # Ethernet / WiFi
-    DEVICE_TYPE: None,
+    DEVICE_TYPE: None
 
-    # The network name that the computer is connected to
-    CONNECTED_SSID: None,
-
-    # The surrounding networks (ie everything != connected_ssid if it exists, else all ssids)
-    SURROUNDING_SSIDS: []
 }
 
 ###########################
@@ -58,7 +53,7 @@ GPS_PROVIDER = "gps_provider"
 LOCALITY_HINT_REQS = {
 
     # Tuple form of GPS coordinates as google would understand
-    GPS_COORDINATES:None,
+    GPS_COORDINATES: None,
 
     # GPS provider
     GPS_PROVIDER: "geoclue"

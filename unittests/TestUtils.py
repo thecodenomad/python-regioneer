@@ -11,7 +11,8 @@ PUBLIC_HOST = "www.google.com"
 PRIVATE_HOST = "192.168.10.1"
 SSH_HOST = "0.0.0.0"
 
-class TestHintHelpers(unittest.TestCase):
+
+class TestUtils(unittest.TestCase):
     """ Test the NetworkHint object"""
 
     def setup(self):

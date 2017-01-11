@@ -1,5 +1,4 @@
 # Need to install distributions version of lshw for future use
 
 pytest==3.0.5
-pywifi==1.1.5
 netifaces==0.10.5
