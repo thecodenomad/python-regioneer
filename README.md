@@ -4,7 +4,7 @@ The general purpose of the application is to provide an abstraction of location,
 
 ## Master Use Case:
 
-User X has 2 monitors at work, but has one monitor at home. Everytime the user goes to work he has to setup his monitors manually the way he likes them.
+User X has 2 monitors at work, but has one monitor at home. Everytime the user goes to work he has to setup his monitors manually the way the user likes them.
 
 Solution: Define a profile for 'work' and allow the execution of system modifications to get the desired environment.
 
