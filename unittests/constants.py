@@ -35,3 +35,11 @@ TEST_ETHERNET_REQS = {
     DEVICE_TYPE: ETHERNET
 }
 
+TEST_SURROUNDING_SSIDS = [
+                            'pizza_is_good', '--', 'xfinitywifi', 'JJP5', 'JJP2.4', 'Backpackers', 'Matrix',
+                            'Backpackers 5G', 'myqwest239A', 'applesnseeds', 'HOME-C0B2', 'Grab-A-Sandwich',
+                            'HP-Print-89-Photosmart 7520', 'HOME-4669-2.4', 'HOME-48E2', 'The Space Room',
+                            'Hollyogirl', 'SweatyBalls1', 'HOME-4669-5', 'NTGR_VMB_1406851592', 'denver',
+                            'lil smitty', 'HOME-5532', 'HOME-5511-5', 'cohome5', 'Shepdog1'
+                         ]
+

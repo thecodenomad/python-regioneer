@@ -107,6 +107,7 @@ class WifiHint(NetworkHint):
         self._connected_ssid = requirements.get(constants.CONNECTED_SSID)
         self._surrounding_ssids = requirements.get(constants.SURROUNDING_SSIDS)
         self._requirements = requirements
+        self.ssid = None
 
     def network_check(self):
         """ Run the network checks required by a WiFi Hint
@@ -127,13 +128,15 @@ class WifiHint(NetworkHint):
 
         ssid = "WiFi not Found"
 
-        opts = ['/sbin/iwconfig', self.net_device]
-        output = check_output(opts).split()
+        opts = ['nmcli', '-f', 'IN-USE,SSID,CHAN,SIGNAL', 'dev', 'wifi', 'list']
+        output = check_output(opts).decode('utf-8')
+        output = output.split('\n')
 
         for line in output:
-            line = line.decode("utf-8")
-            if "ESSID:" in line:
-                ssid = line[7:-1]
+            tabs = line.split()
+            if tabs and tabs[1] != "SSID":
+                if tabs[0] == "*":
+                    ssid = tabs[1]
 
         return ssid
 
@@ -144,6 +147,23 @@ class WifiHint(NetworkHint):
 
         """
 
+        all_ssids = []
+
+        opts = ['nmcli', '-f', 'SSID', 'dev', 'wifi', 'list']
+        output = check_output(opts).decode('utf-8')
+        output = output.split('\n')
+
+        for line in output:
+            ssid = line.strip()
+            if not ssid:
+                continue
+
+            # TODO: We should recored channel and signal so we can keep same-named ssids
+            # within the list
+            if ssid not in ["SSID", self.ssid] and ssid not in all_ssids:
+                all_ssids.append( ssid )
+
+        return all_ssids
 
 class EthernetHint(NetworkHint):
     """ Subclass of NetworkHint that applies specifically to ethernet connectivity """

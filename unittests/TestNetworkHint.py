@@ -10,7 +10,8 @@ from regioneer.core.hints.LocalityHint import LocalityHint
 from regioneer.core.hints.NetworkHint import NetworkHint, WifiHint, EthernetHint
 from regioneer.core.hints.PhysicalHint import PhysicalHint
 
-from regioneer.unittests.constants import TEST_WIFI_REQS, TEST_ETHERNET_REQS, TEST_WIFI_SSID
+from regioneer.unittests.constants import TEST_WIFI_REQS, TEST_ETHERNET_REQS, TEST_WIFI_SSID, \
+                                          TEST_SURROUNDING_SSIDS
 
 
 class TestLocationHint(unittest.TestCase):
@@ -48,6 +49,20 @@ class TestWiFiHint(unittest.TestCase):
         print("Constant gives: {}".format(TEST_WIFI_SSID))
 
         self.assertTrue( ssid == TEST_WIFI_SSID )
+
+    def test_get_surround_ssids(self):
+        """ Test getting the surrounding ssids """
+
+        wifi_hint = WifiHint(requirements=TEST_WIFI_REQS)
+        ssids = wifi_hint.get_surrounding_ssids()
+
+        valid_ssids = [s for s in ssids if s in TEST_SURROUNDING_SSIDS]
+
+        threshold = 4
+
+        print(len(TEST_SURROUNDING_SSIDS) - len(valid_ssids))
+
+        self.assertTrue(len(TEST_SURROUNDING_SSIDS) - len(valid_ssids) < threshold)
 
 
 class TestEthernetHint(unittest.TestCase):
