@@ -9,7 +9,7 @@
     :license: Apache 2.0, see LICENSE for more details
 """
 
-from regioneer.core.hints.constants import NET_DEVICE, DEVICE_TYPE
+from regioneer.core.hints.constants import NET_DEVICE, DEVICE_TYPE, SURROUNDING_SSIDS
 
 #---------------------------------#
 # Required for UnitTest execution #
@@ -25,11 +25,6 @@ WIFI = "wifi"
 
 ETHERNET = "ethernet"
 
-TEST_WIFI_REQS = {
-    NET_DEVICE: TEST_WIFI_DEVICE,
-    DEVICE_TYPE: WIFI
-}
-
 TEST_ETHERNET_REQS = {
     NET_DEVICE: TEST_ETH_DEVICE,
     DEVICE_TYPE: ETHERNET
@@ -42,4 +37,10 @@ TEST_SURROUNDING_SSIDS = [
                             'Hollyogirl', 'SweatyBalls1', 'HOME-4669-5', 'NTGR_VMB_1406851592', 'denver',
                             'lil smitty', 'HOME-5532', 'HOME-5511-5', 'cohome5', 'Shepdog1'
                          ]
+
+TEST_WIFI_REQS = {
+    NET_DEVICE: TEST_WIFI_DEVICE,
+    DEVICE_TYPE: WIFI,
+    SURROUNDING_SSIDS: TEST_SURROUNDING_SSIDS
+}
 

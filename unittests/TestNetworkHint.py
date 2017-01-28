@@ -1,7 +1,7 @@
 """ The purpose of this module is to test the NetworkHint object """
 
 # import pytest
-# from unittests.mock import MagicMock
+from unittest.mock import MagicMock
 
 import unittest
 
@@ -54,15 +54,57 @@ class TestWiFiHint(unittest.TestCase):
         """ Test getting the surrounding ssids """
 
         wifi_hint = WifiHint(requirements=TEST_WIFI_REQS)
-        ssids = wifi_hint.get_surrounding_ssids()
+        self.assertTrue(wifi_hint.is_location_using_ssids())
 
-        valid_ssids = [s for s in ssids if s in TEST_SURROUNDING_SSIDS]
+    def test_ssid_passing_threshold(self):
+        """ Test the 'sunny-day' threshold for surrounding ssids """
 
-        threshold = 4
+        wifi_hint = WifiHint(requirements=TEST_WIFI_REQS)
+        wifi_hint.get_surrounding_ssids = MagicMock()
+        wifi_hint.get_surrounding_ssids.return_value = TEST_SURROUNDING_SSIDS
 
-        print(len(TEST_SURROUNDING_SSIDS) - len(valid_ssids))
+        # Test 100%
+        self.assertTrue(wifi_hint.is_location_using_ssids())
 
-        self.assertTrue(len(TEST_SURROUNDING_SSIDS) - len(valid_ssids) < threshold)
+        half_thresh = .5
+        wifi_hint = WifiHint(requirements=TEST_WIFI_REQS, surrounding_ssid_threshold=half_thresh)
+        wifi_hint.get_surrounding_ssids = MagicMock()
+
+        subset_len = int(half_thresh * len(TEST_SURROUNDING_SSIDS))
+        t_s_ssids  = TEST_SURROUNDING_SSIDS[0:subset_len]
+
+        wifi_hint.get_surrounding_ssids.return_value = t_s_ssids
+
+        print("Subset Length: {}, Test ssids: {}".format(subset_len, t_s_ssids))
+
+        # Test non-default thresholds pass
+        self.assertTrue(wifi_hint.is_location_using_ssids())
+
+
+    def test_ssid_failing_threshold(self):
+        """ Test the 'rainy-day' threshold for surrounding ssids """
+
+        wifi_hint = WifiHint(requirements=TEST_WIFI_REQS)
+        wifi_hint.get_surrounding_ssids = MagicMock()
+
+        # Test 0%
+        wifi_hint.get_surrounding_ssids.return_value = []
+        self.assertFalse(wifi_hint.is_location_using_ssids())
+
+        # Test non-default threshold fail
+        thresh = .8
+        half_thresh = .5
+        wifi_hint = WifiHint(requirements=TEST_WIFI_REQS, surrounding_ssid_threshold=thresh)
+        wifi_hint.get_surrounding_ssids = MagicMock()
+
+        # Slice based on threshold
+        subset_len = int(half_thresh * len(TEST_SURROUNDING_SSIDS))
+        t_s_ssids  = TEST_SURROUNDING_SSIDS[0:subset_len]
+
+        print("Subset Length: {}, Test ssids: {}".format(subset_len, t_s_ssids))
+        wifi_hint.get_surrounding_ssids.return_value = t_s_ssids
+        self.assertFalse(wifi_hint.is_location_using_ssids())
+
 
 
 class TestEthernetHint(unittest.TestCase):

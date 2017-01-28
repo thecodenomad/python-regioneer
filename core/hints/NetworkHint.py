@@ -102,12 +102,24 @@ class NetworkHint(LocationHint):
 class WifiHint(NetworkHint):
     """ Subclass of NetworkHint that applies specifically to WiFi """
 
-    def __init__(self, requirements=constants.NETWORK_HINT_REQS):
+    def __init__(self, requirements=constants.NETWORK_HINT_REQS, surrounding_ssid_threshold=.6):
         NetworkHint.__init__(self, requirements=requirements)
         self._connected_ssid = requirements.get(constants.CONNECTED_SSID)
-        self._surrounding_ssids = requirements.get(constants.SURROUNDING_SSIDS)
+        self._hint_ssids = requirements.get(constants.SURROUNDING_SSIDS)
+        self._ssid_threshold = surrounding_ssid_threshold
         self._requirements = requirements
         self.ssid = None
+
+    @property
+    def hint_ssids(self):
+        """ The surrounding ssids required based on the requirements object """
+        return self._hint_ssids
+
+    @property
+    def ssid_threshold(self):
+        """ The threshold percentage to determine if you are in a specific location based on
+        surrounding ssids."""
+        return self._ssid_threshold
 
     def network_check(self):
         """ Run the network checks required by a WiFi Hint
@@ -142,9 +154,7 @@ class WifiHint(NetworkHint):
 
     def get_surrounding_ssids(self):
         """
-
-        Returns:
-
+        Returns: A list of the surrounding ssids
         """
 
         all_ssids = []
@@ -164,6 +174,23 @@ class WifiHint(NetworkHint):
                 all_ssids.append( ssid )
 
         return all_ssids
+
+    def is_location_using_ssids(self):
+        """The calculation for determining threshold met:
+
+            (total expected ssids - found ssids) / total expected ssids
+
+            NOTE: the default threshold is .75 unless otherwise specified
+
+        Returns: True if surrounding ssids reach self._ssid_threshold, False otherwise
+        """
+
+        s_ssids = self.get_surrounding_ssids()
+
+        current_thresh = float(len(s_ssids)) / float(len(self.hint_ssids))
+
+        return current_thresh >= self.ssid_threshold
+
 
 class EthernetHint(NetworkHint):
     """ Subclass of NetworkHint that applies specifically to ethernet connectivity """
