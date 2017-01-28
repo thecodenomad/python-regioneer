@@ -42,16 +42,16 @@ from subprocess import check_output
 class NetworkHint(LocationHint):
     """ This is a subclass of the LocationHint that determines a location based on network based requirements. """
 
-    def __init__(self, requirements=constants.NETWORK_HINT_REQS):
+    def __init__(self, hint_config=constants.NETWORK_HINT_REQS):
         LocationHint.__init__(self)
-        self._net_device = requirements[constants.NET_DEVICE]
-        self._device_type = requirements[constants.DEVICE_TYPE]
-        self._requirements = requirements
+        self._net_device = hint_config[constants.NET_DEVICE]
+        self._device_type = hint_config[constants.DEVICE_TYPE]
+        self._hint_config = hint_config
 
     @property
-    def requirements(self):
+    def hint_config(self):
         """ dict: Payload of the hint """
-        return self._requirements
+        return self._hint_config
 
     @property
     def net_device(self):
@@ -102,14 +102,15 @@ class NetworkHint(LocationHint):
 class WifiHint(NetworkHint):
     """ Subclass of NetworkHint that applies specifically to WiFi """
 
-    def __init__(self, requirements=constants.NETWORK_HINT_REQS, surrounding_ssid_threshold=.6):
-        NetworkHint.__init__(self, requirements=requirements)
-        self._hint_ssid = requirements.get(constants.CONNECTED_SSID)
-        self._hint_ssids = requirements.get(constants.SURROUNDING_SSIDS)
+    def __init__(self, hint_config=constants.WIFI_HINT_CONFIG, surrounding_ssid_threshold=.6):
+        NetworkHint.__init__(self, hint_config=hint_config)
+        self._hint_ssid = hint_config.get(constants.CONNECTED_SSID)
+        self._hint_ssids = hint_config.get(constants.NEARBY_SSIDS)
         self._ssid_threshold = surrounding_ssid_threshold
-        self._requirements = requirements
         self.ssid = None
 
+
+    # TODO: The properties here should probably pull from a configuration manager keep that in mind as you are adding properties
     @property
     def hint_ssids(self):
         """ The surrounding ssids required based on the requirements object """
@@ -118,7 +119,6 @@ class WifiHint(NetworkHint):
     @property
     def hint_ssid(self):
         """ Returns the ssid connection required for the hint """
-
         return self._hint_ssid
 
     @property
@@ -126,6 +126,23 @@ class WifiHint(NetworkHint):
         """ The threshold percentage to determine if you are in a specific location based on
         surrounding ssids."""
         return self._ssid_threshold
+
+    def valid_hint_config(self):
+        """ Checks the passed in config to determine if they are valid """
+
+        reqs = self.hint_config[constants.REQUIREMENTS]
+        ops  = self.hint_config[constants.OPTIONAL]
+
+        # If the required key or its value in the config is none then fail
+        for key, req in reqs:
+            if not self.hint_config[key] or not self.hint_config[req]:
+                return False
+
+        for key, req in ops:
+            if not self.hint_config[key] or not self.hint_config[req]:
+                return False
+
+        return True
 
     def network_check(self):
         """ Run the network checks required by a WiFi Hint
@@ -135,6 +152,23 @@ class WifiHint(NetworkHint):
             True if successful, False otherwise
         """
 
+        # TODO: make a special exception for this
+        assert self.valid_hint_config()
+
+        # Check if connected ssid is required
+        # By itself a WifiHint MUST have a connected ssid, but in conjunction with another hint, say ethernet,
+        # then it might not be required
+        if self.hint_config[constants.REQUIRE_CONNECTED_SSID]:
+            # TODO: make a special exception for this
+            assert self.is_location_using_ssid()
+
+        # Check if nearby ssids are required
+        if self.hint_config(REQUIRE_NEARBY_SSIDS):
+            # TODO: make a special exception for this
+            assert self.is_location_using_nearby_ssids()
+
+        return True
+
     def get_connected_ssid(self):
         """ Get the WiFi network id that is connected
         Returns:
@@ -142,7 +176,7 @@ class WifiHint(NetworkHint):
             The connected network SSID
         """
 
-        # TODO: Not a huge fan of doing this via a subprocess
+        # TODO: Not a huge fan of doing this via a subprocess, can we plug into nmcli?
 
         ssid = "WiFi not Found"
 
@@ -206,9 +240,9 @@ class WifiHint(NetworkHint):
 class EthernetHint(NetworkHint):
     """ Subclass of NetworkHint that applies specifically to ethernet connectivity """
 
-    def __init__(self, requirements=constants.NETWORK_HINT_REQS):
-        NetworkHint.__init__(self, requirements=requirements)
-        self._requirements = requirements
+    def __init__(self, hint_config=constants.NETWORK_HINT_REQS):
+        NetworkHint.__init__(self, hint_config=requirements)
+        self._hint_config = hint_config
 
     def network_check(self):
         """ Run the network checks required by a Ethernet Hint

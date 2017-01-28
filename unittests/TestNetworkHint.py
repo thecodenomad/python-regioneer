@@ -42,7 +42,7 @@ class TestWiFiHint(unittest.TestCase):
     def test_get_ssid(self):
         """" Test getting the ssid for a given device. """
 
-        wifi_hint = WifiHint(requirements=TEST_WIFI_REQS)
+        wifi_hint = WifiHint(hint_config=TEST_WIFI_REQS)
         ssid = wifi_hint.get_connected_ssid()
 
         print("Method gives: {}".format(ssid))
@@ -53,13 +53,13 @@ class TestWiFiHint(unittest.TestCase):
     def test_get_surround_ssids(self):
         """ Test getting the surrounding ssids """
 
-        wifi_hint = WifiHint(requirements=TEST_WIFI_REQS)
+        wifi_hint = WifiHint(hint_config=TEST_WIFI_REQS)
         self.assertTrue(wifi_hint.is_location_using_nearby_ssids())
 
     def test_ssid_passing_threshold(self):
         """ Test the 'sunny-day' threshold for surrounding ssids """
 
-        wifi_hint = WifiHint(requirements=TEST_WIFI_REQS)
+        wifi_hint = WifiHint(hint_config=TEST_WIFI_REQS)
         wifi_hint.get_surrounding_ssids = MagicMock()
         wifi_hint.get_surrounding_ssids.return_value = TEST_SURROUNDING_SSIDS
 
@@ -67,7 +67,7 @@ class TestWiFiHint(unittest.TestCase):
         self.assertTrue(wifi_hint.is_location_using_nearby_ssids())
 
         half_thresh = .5
-        wifi_hint = WifiHint(requirements=TEST_WIFI_REQS, surrounding_ssid_threshold=half_thresh)
+        wifi_hint = WifiHint(hint_config=TEST_WIFI_REQS, surrounding_ssid_threshold=half_thresh)
         wifi_hint.get_surrounding_ssids = MagicMock()
 
         subset_len = int(half_thresh * len(TEST_SURROUNDING_SSIDS))
@@ -84,7 +84,7 @@ class TestWiFiHint(unittest.TestCase):
     def test_ssid_failing_threshold(self):
         """ Test the 'rainy-day' threshold for surrounding ssids """
 
-        wifi_hint = WifiHint(requirements=TEST_WIFI_REQS)
+        wifi_hint = WifiHint(hint_config=TEST_WIFI_REQS)
         wifi_hint.get_surrounding_ssids = MagicMock()
 
         # Test 0%
@@ -94,7 +94,7 @@ class TestWiFiHint(unittest.TestCase):
         # Test non-default threshold fail
         thresh = .8
         half_thresh = .5
-        wifi_hint = WifiHint(requirements=TEST_WIFI_REQS, surrounding_ssid_threshold=thresh)
+        wifi_hint = WifiHint(hint_config=TEST_WIFI_REQS, surrounding_ssid_threshold=thresh)
         wifi_hint.get_surrounding_ssids = MagicMock()
 
         # Slice based on threshold
@@ -109,7 +109,7 @@ class TestWiFiHint(unittest.TestCase):
         """ Test location based on connected ssid """
 
         # Test passing case
-        wifi_hint = WifiHint(requirements=TEST_WIFI_REQS)
+        wifi_hint = WifiHint(hint_config=TEST_WIFI_REQS)
         wifi_hint._hint_ssid = TEST_CONNECTED_SSID
 
         self.assertTrue(wifi_hint.is_location_using_ssid())
@@ -117,6 +117,40 @@ class TestWiFiHint(unittest.TestCase):
         # Test Failure case
         wifi_hint._hint_ssid = "--!BEEFCAKE!--"
         self.assertFalse(wifi_hint.is_location_using_ssid())
+
+
+    # TODO:
+    # Need to create unittests to test whether computer is in a given location for wifi settings
+    # Connected SSID is required
+
+    def test_is_location_connected_ssid(self):
+        """ Test if in the right locatoin based on the connected ssid """
+
+        # wifi_hint_config = {
+        #     REQUIREMENTS: {
+        #         NET_DEVICE: DEVICE_TYPE,
+        #         DEVICE_TYPE: NET_DEVICE,
+        #         CONNECTED_SSID: NET_DEVICE,
+        #     },
+        #
+        #     OPTIONAL: {
+        #         REQUIRE_NEARBY_SSIDS: NEARBY_SSIDS
+        #     },
+        #
+        #     NET_DEVICE: None,
+        #     DEVICE_TYPE: "wifi",
+        #     REQUIRE_CONNECTED_SSID: True,
+        #     CONNECTED_SSID: None,
+        #     REQUIRE_NEARBY_SSIDS: False,
+        #     NEARBY_SSIDS: None
+        # }
+
+
+    def test_is_location_nearby_ssids(self):
+        """ Test if in the right location based on the nearby ssids and no connected ssid """
+        pass
+
+
 
 
 class TestEthernetHint(unittest.TestCase):
