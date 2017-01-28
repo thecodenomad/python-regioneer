@@ -104,7 +104,7 @@ class WifiHint(NetworkHint):
 
     def __init__(self, requirements=constants.NETWORK_HINT_REQS, surrounding_ssid_threshold=.6):
         NetworkHint.__init__(self, requirements=requirements)
-        self._connected_ssid = requirements.get(constants.CONNECTED_SSID)
+        self._hint_ssid = requirements.get(constants.CONNECTED_SSID)
         self._hint_ssids = requirements.get(constants.SURROUNDING_SSIDS)
         self._ssid_threshold = surrounding_ssid_threshold
         self._requirements = requirements
@@ -114,6 +114,12 @@ class WifiHint(NetworkHint):
     def hint_ssids(self):
         """ The surrounding ssids required based on the requirements object """
         return self._hint_ssids
+
+    @property
+    def hint_ssid(self):
+        """ Returns the ssid connection required for the hint """
+
+        return self._hint_ssid
 
     @property
     def ssid_threshold(self):
@@ -175,14 +181,19 @@ class WifiHint(NetworkHint):
 
         return all_ssids
 
-    def is_location_using_ssids(self):
+    def is_location_using_ssid(self):
+        """ Determine if this is the location based on the connected SSID """
+
+        return self.hint_ssid == self.get_connected_ssid()
+
+    def is_location_using_nearby_ssids(self):
         """The calculation for determining threshold met:
 
             (total expected ssids - found ssids) / total expected ssids
 
             NOTE: the default threshold is .75 unless otherwise specified
 
-        Returns: True if surrounding ssids reach self._ssid_threshold, False otherwise
+        Returns: True if nearby/surrounding ssids reach self.ssid_threshold, False otherwise
         """
 
         s_ssids = self.get_surrounding_ssids()

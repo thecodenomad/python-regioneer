@@ -1,7 +1,7 @@
 """ The purpose of this module is to test the NetworkHint object """
 
 # import pytest
-from unittest.mock import MagicMock
+from unittest.mock import patch, MagicMock, PropertyMock
 
 import unittest
 
@@ -11,7 +11,7 @@ from regioneer.core.hints.NetworkHint import NetworkHint, WifiHint, EthernetHint
 from regioneer.core.hints.PhysicalHint import PhysicalHint
 
 from regioneer.unittests.constants import TEST_WIFI_REQS, TEST_ETHERNET_REQS, TEST_WIFI_SSID, \
-                                          TEST_SURROUNDING_SSIDS
+                                          TEST_SURROUNDING_SSIDS, TEST_CONNECTED_SSID
 
 
 class TestLocationHint(unittest.TestCase):
@@ -54,7 +54,7 @@ class TestWiFiHint(unittest.TestCase):
         """ Test getting the surrounding ssids """
 
         wifi_hint = WifiHint(requirements=TEST_WIFI_REQS)
-        self.assertTrue(wifi_hint.is_location_using_ssids())
+        self.assertTrue(wifi_hint.is_location_using_nearby_ssids())
 
     def test_ssid_passing_threshold(self):
         """ Test the 'sunny-day' threshold for surrounding ssids """
@@ -64,7 +64,7 @@ class TestWiFiHint(unittest.TestCase):
         wifi_hint.get_surrounding_ssids.return_value = TEST_SURROUNDING_SSIDS
 
         # Test 100%
-        self.assertTrue(wifi_hint.is_location_using_ssids())
+        self.assertTrue(wifi_hint.is_location_using_nearby_ssids())
 
         half_thresh = .5
         wifi_hint = WifiHint(requirements=TEST_WIFI_REQS, surrounding_ssid_threshold=half_thresh)
@@ -78,7 +78,7 @@ class TestWiFiHint(unittest.TestCase):
         print("Subset Length: {}, Test ssids: {}".format(subset_len, t_s_ssids))
 
         # Test non-default thresholds pass
-        self.assertTrue(wifi_hint.is_location_using_ssids())
+        self.assertTrue(wifi_hint.is_location_using_nearby_ssids())
 
 
     def test_ssid_failing_threshold(self):
@@ -89,7 +89,7 @@ class TestWiFiHint(unittest.TestCase):
 
         # Test 0%
         wifi_hint.get_surrounding_ssids.return_value = []
-        self.assertFalse(wifi_hint.is_location_using_ssids())
+        self.assertFalse(wifi_hint.is_location_using_nearby_ssids())
 
         # Test non-default threshold fail
         thresh = .8
@@ -103,8 +103,20 @@ class TestWiFiHint(unittest.TestCase):
 
         print("Subset Length: {}, Test ssids: {}".format(subset_len, t_s_ssids))
         wifi_hint.get_surrounding_ssids.return_value = t_s_ssids
-        self.assertFalse(wifi_hint.is_location_using_ssids())
+        self.assertFalse(wifi_hint.is_location_using_nearby_ssids())
 
+    def test_connected_ssid(self):
+        """ Test location based on connected ssid """
+
+        # Test passing case
+        wifi_hint = WifiHint(requirements=TEST_WIFI_REQS)
+        wifi_hint._hint_ssid = TEST_CONNECTED_SSID
+
+        self.assertTrue(wifi_hint.is_location_using_ssid())
+
+        # Test Failure case
+        wifi_hint._hint_ssid = "--!BEEFCAKE!--"
+        self.assertFalse(wifi_hint.is_location_using_ssid())
 
 
 class TestEthernetHint(unittest.TestCase):
