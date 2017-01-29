@@ -17,6 +17,8 @@ from regioneer.core.hints.constants import NET_DEVICE, DEVICE_TYPE, NEARBY_SSIDS
 # Required for UnitTest execution #
 #---------------------------------#
 
+OFFLINE_TEST = True
+
 TEST_WIFI_DEVICE = "wlp1s0"
 
 TEST_ETH_DEVICE  = "enp6s0u1u1u4"

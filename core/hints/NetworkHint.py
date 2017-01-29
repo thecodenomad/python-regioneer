@@ -32,7 +32,7 @@ import re
 
 from abc import abstractmethod
 
-from regioneer.core.hints import constants
+from regioneer.core.hints import constants, errors
 from regioneer.core.hints.abstractions import LocationHint
 from regioneer.core.utils import networking
 
@@ -134,12 +134,27 @@ class WifiHint(NetworkHint):
         ops  = self.hint_config[constants.OPTIONAL]
 
         # If the required key or its value in the config is none then fail
-        for key, req in reqs:
-            if not self.hint_config[key] or not self.hint_config[req]:
+        for key, req in reqs.items():
+            if not self.hint_config.get(key):
+                print("Failed on key: {}".format(key))
                 return False
 
-        for key, req in ops:
-            if not self.hint_config[key] or not self.hint_config[req]:
+            if not self.hint_config.get(req):
+                print("Failed on req: {}".format(req))
+                return False
+
+        for key, req in ops.items():
+
+            # Skip options that aren't enabled
+            if self.hint_config[key] == False:
+                print("Option: {} not enabled, skipping req check".format(key))
+                continue
+
+            print("Option: {} enabled, checking req".format(key))
+
+            # Looks like this is key is enabled, checking it's requirements
+            if not self.hint_config.get(req):
+                print("Failed on req: {}".format(req))
                 return False
 
         return True
@@ -153,19 +168,20 @@ class WifiHint(NetworkHint):
         """
 
         # TODO: make a special exception for this
-        assert self.valid_hint_config()
+        if not self.valid_hint_config():
+            raise errors.InvalidNetworkConfig("Failed to validate network hint")
 
         # Check if connected ssid is required
         # By itself a WifiHint MUST have a connected ssid, but in conjunction with another hint, say ethernet,
         # then it might not be required
         if self.hint_config[constants.REQUIRE_CONNECTED_SSID]:
-            # TODO: make a special exception for this
-            assert self.is_location_using_ssid()
+            if self.is_location_using_ssid():
+                raise errors.SSIDNotFound("Not connected to: {}".format(self.hint_ssid))
 
         # Check if nearby ssids are required
         if self.hint_config(REQUIRE_NEARBY_SSIDS):
-            # TODO: make a special exception for this
-            assert self.is_location_using_nearby_ssids()
+            if not self.is_location_using_nearby_ssids():
+                raise errors.NearbySSIDError("Failed finding the required nearby ssids")
 
         return True
 

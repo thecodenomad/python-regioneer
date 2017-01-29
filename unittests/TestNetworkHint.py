@@ -11,7 +11,8 @@ from regioneer.core.hints.NetworkHint import NetworkHint, WifiHint, EthernetHint
 from regioneer.core.hints.PhysicalHint import PhysicalHint
 
 from regioneer.unittests.constants import TEST_WIFI_REQS, TEST_ETHERNET_REQS, TEST_WIFI_SSID, \
-                                          TEST_SURROUNDING_SSIDS, TEST_CONNECTED_SSID
+                                          TEST_SURROUNDING_SSIDS, TEST_CONNECTED_SSID, OFFLINE_TEST, \
+                                          TEST_WIFI_DEVICE, TEST_ETH_DEVICE, WIFI, ETHERNET
 
 
 class TestLocationHint(unittest.TestCase):
@@ -43,6 +44,12 @@ class TestWiFiHint(unittest.TestCase):
         """" Test getting the ssid for a given device. """
 
         wifi_hint = WifiHint(hint_config=TEST_WIFI_REQS)
+
+        # Make this test offline capable
+        if OFFLINE_TEST:
+            wifi_hint.get_connected_ssid = MagicMock()
+            wifi_hint.get_connected_ssid.return_value = TEST_CONNECTED_SSID
+
         ssid = wifi_hint.get_connected_ssid()
 
         print("Method gives: {}".format(ssid))
@@ -54,6 +61,11 @@ class TestWiFiHint(unittest.TestCase):
         """ Test getting the surrounding ssids """
 
         wifi_hint = WifiHint(hint_config=TEST_WIFI_REQS)
+
+        if OFFLINE_TEST:
+            wifi_hint.get_surrounding_ssids = MagicMock()
+            wifi_hint.get_surrounding_ssids.return_value = TEST_SURROUNDING_SSIDS
+
         self.assertTrue(wifi_hint.is_location_using_nearby_ssids())
 
     def test_ssid_passing_threshold(self):
@@ -79,7 +91,6 @@ class TestWiFiHint(unittest.TestCase):
 
         # Test non-default thresholds pass
         self.assertTrue(wifi_hint.is_location_using_nearby_ssids())
-
 
     def test_ssid_failing_threshold(self):
         """ Test the 'rainy-day' threshold for surrounding ssids """
@@ -112,6 +123,11 @@ class TestWiFiHint(unittest.TestCase):
         wifi_hint = WifiHint(hint_config=TEST_WIFI_REQS)
         wifi_hint._hint_ssid = TEST_CONNECTED_SSID
 
+        # Make this test offline capable
+        if OFFLINE_TEST:
+            wifi_hint.get_connected_ssid = MagicMock()
+            wifi_hint.get_connected_ssid.return_value = TEST_CONNECTED_SSID
+
         self.assertTrue(wifi_hint.is_location_using_ssid())
 
         # Test Failure case
@@ -123,34 +139,108 @@ class TestWiFiHint(unittest.TestCase):
     # Need to create unittests to test whether computer is in a given location for wifi settings
     # Connected SSID is required
 
+    def test_hint_config(self):
+        """ Test if in the right locatoin based on the connected ssid """
+
+        wifi_hint_config = {
+            constants.REQUIREMENTS: {
+                constants.NET_DEVICE: constants.DEVICE_TYPE,
+                constants.DEVICE_TYPE: constants.NET_DEVICE,
+                constants.CONNECTED_SSID: constants.NET_DEVICE,
+            },
+
+            constants.OPTIONAL: {
+                constants.REQUIRE_NEARBY_SSIDS: constants.NEARBY_SSIDS
+            },
+
+            constants.NET_DEVICE: TEST_WIFI_DEVICE,
+            constants.DEVICE_TYPE: WIFI,
+            constants.REQUIRE_CONNECTED_SSID: True,
+            constants.CONNECTED_SSID: TEST_WIFI_SSID,
+            constants.REQUIRE_NEARBY_SSIDS: False
+        }
+
+        # Test Valid config with just a connected SSID
+        wifi_hint = WifiHint(hint_config=wifi_hint_config)
+        self.assertTrue(wifi_hint.valid_hint_config())
+
+        # Test Valid config with connected ssid and required nearby ssids
+        wifi_hint_config[constants.REQUIRE_NEARBY_SSIDS] = True
+        wifi_hint_config[constants.NEARBY_SSIDS] = TEST_SURROUNDING_SSIDS
+        wifi_hint = WifiHint(hint_config=wifi_hint_config)
+        self.assertTrue(wifi_hint.valid_hint_config())
+
+        # Test Invalid config with connected ssid and require nearby ssids with
+        # specifying nearby ssids
+        wifi_hint_config[constants.REQUIRE_NEARBY_SSIDS] = True
+        wifi_hint_config[constants.NEARBY_SSIDS] = []
+        wifi_hint = WifiHint(hint_config=wifi_hint_config)
+        self.assertFalse(wifi_hint.valid_hint_config())
+
+
     def test_is_location_connected_ssid(self):
         """ Test if in the right locatoin based on the connected ssid """
 
-        # wifi_hint_config = {
-        #     REQUIREMENTS: {
-        #         NET_DEVICE: DEVICE_TYPE,
-        #         DEVICE_TYPE: NET_DEVICE,
-        #         CONNECTED_SSID: NET_DEVICE,
-        #     },
-        #
-        #     OPTIONAL: {
-        #         REQUIRE_NEARBY_SSIDS: NEARBY_SSIDS
-        #     },
-        #
-        #     NET_DEVICE: None,
-        #     DEVICE_TYPE: "wifi",
-        #     REQUIRE_CONNECTED_SSID: True,
-        #     CONNECTED_SSID: None,
-        #     REQUIRE_NEARBY_SSIDS: False,
-        #     NEARBY_SSIDS: None
-        # }
+        wifi_hint_config = {
+            constants.REQUIREMENTS: {
+                constants.NET_DEVICE: constants.DEVICE_TYPE,
+                constants.DEVICE_TYPE: constants.NET_DEVICE,
+                constants.CONNECTED_SSID: constants.NET_DEVICE,
+            },
+
+            constants.OPTIONAL: {
+                constants.REQUIRE_NEARBY_SSIDS: constants.NEARBY_SSIDS
+            },
+
+            constants.NET_DEVICE: TEST_WIFI_DEVICE,
+            constants.DEVICE_TYPE: WIFI,
+            constants.REQUIRE_CONNECTED_SSID: True,
+            constants.CONNECTED_SSID: TEST_WIFI_SSID,
+            constants.REQUIRE_NEARBY_SSIDS: False
+        }
+
+        wifi_hint = WifiHint(hint_config=wifi_hint_config)
+
+        if OFFLINE_TEST:
+            wifi_hint.get_connected_ssid = MagicMock()
+            wifi_hint.get_connected_ssid.return_value = TEST_CONNECTED_SSID
+
+        self.assertTrue(wifi_hint.valid_hint_config())
+        self.assertTrue(wifi_hint.is_location_using_ssid())
 
 
     def test_is_location_nearby_ssids(self):
         """ Test if in the right location based on the nearby ssids and no connected ssid """
-        pass
 
+        wifi_hint_config = {
+            constants.REQUIREMENTS: {
+                constants.NET_DEVICE: constants.DEVICE_TYPE,
+                constants.DEVICE_TYPE: constants.NET_DEVICE,
+                constants.CONNECTED_SSID: constants.NET_DEVICE,
+            },
 
+            constants.OPTIONAL: {
+                constants.REQUIRE_NEARBY_SSIDS: constants.NEARBY_SSIDS
+            },
+
+            constants.NET_DEVICE: TEST_WIFI_DEVICE,
+            constants.DEVICE_TYPE: WIFI,
+            constants.REQUIRE_CONNECTED_SSID: True,
+            constants.CONNECTED_SSID: TEST_WIFI_SSID,
+            constants.REQUIRE_NEARBY_SSIDS: True,
+            constants.NEARBY_SSIDS: TEST_SURROUNDING_SSIDS
+        }
+
+        wifi_hint = WifiHint(hint_config=wifi_hint_config)
+
+        if OFFLINE_TEST:
+            wifi_hint.get_connected_ssid = MagicMock()
+            wifi_hint.get_surrounding_ssids = MagicMock()
+            wifi_hint.get_connected_ssid.return_value = TEST_CONNECTED_SSID
+            wifi_hint.get_surrounding_ssids.return_value = TEST_SURROUNDING_SSIDS
+
+        self.assertTrue(wifi_hint.valid_hint_config())
+        self.assertTrue(wifi_hint.is_location_using_nearby_ssids())
 
 
 class TestEthernetHint(unittest.TestCase):

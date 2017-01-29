@@ -11,11 +11,27 @@
 """
 
 
-class SSIDNotFound(Exception):
+class NetworkHintError(Exception):
+    """ Exception to throw when a host is not found """
+    pass
+
+class InvalidNetworkConfig(NetworkHintError):
+    """ Exception to throw when hint_config is invalid """
+    pass
+
+class SSIDNotFound(NetworkHintError):
     """ Exception to throw when an SSID doesn't exist """
     pass
 
+class NearbySSIDError(NetworkHintError):
+    """ Exception to throw when a threshold is not met """
+    pass
 
-class HostNotFound(Exception):
+class HostNotFound(NetworkHintError):
     """ Exception to throw when a host is not found """
     pass
+
+class ThresholdError(NetworkHintError):
+    """ Exception to throw when a threshold is not met """
+    pass
+

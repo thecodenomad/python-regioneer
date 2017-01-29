@@ -46,6 +46,7 @@ CONNECTED_SSID="connected_ssid"
 NEARBY_SSIDS= "nearby_ssids"
 REQUIRE_NEARBY_SSIDS="require_nearby_ssids"
 REQUIRE_CONNECTED_SSID="require_connected_ssid"
+NEARBY_SSID_THRESHOLD = "nearby_ssid_threshold"
 
 WIFI_HINT_CONFIG = {
 
@@ -78,6 +79,8 @@ WIFI_HINT_CONFIG = {
     # Requirements for a Wifi Hint ('None' will result in an exception TODO: list exception)
     REQUIRE_CONNECTED_SSID: True,
     CONNECTED_SSID: None,
+
+    NEARBY_SSID_THRESHOLD: None,
 
     # Optional for a Wifi Hint
     REQUIRE_NEARBY_SSIDS: False,
