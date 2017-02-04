@@ -17,15 +17,19 @@ Solution: Define a profile for 'work' and allow the execution of system modifica
     * Provider <geoclue 1 / geoclue 2>
         * Need check existence of geo clue
         * Fallback: google location based IP
+
 * Connected Wifi
-    * Surrounding Wifi Networks
-    * Connected Wifi Network
+    * (Required) Device
+    * (Required) IP
+    * (Required) Connected Wifi Network
+    * (Optional) Surrounding Wifi Networks with threshold
+
 * Connected eth
-    * Device
-    * Must have IP
-    * Pingable network location <public/private>
-    * Public <Default: Google, opt: (user specified) >
-    * Private <user specified>
+    * (Required) Device
+    * (Required) Must have IP
+    * (Optional) Pingable network location <public/private>
+    * (Optional) Pingable Public <Default: Google, opt: (user specified) >
+    * (Optional) Pingable Private <user specified>
 
 * Existence of specific ephemeral object
     * Pingable server (public or private, preferred: private)
