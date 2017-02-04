@@ -146,7 +146,7 @@ class WifiHint(NetworkHint):
         for key, req in ops.items():
 
             # Skip options that aren't enabled
-            if self.hint_config[key] == False:
+            if not self.hint_config[key]:
                 print("Option: {} not enabled, skipping req check".format(key))
                 continue
 
