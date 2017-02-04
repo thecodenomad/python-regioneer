@@ -179,7 +179,7 @@ class WifiHint(NetworkHint):
                 raise errors.SSIDNotFound("Not connected to: {}".format(self.hint_ssid))
 
         # Check if nearby ssids are required
-        if self.hint_config(REQUIRE_NEARBY_SSIDS):
+        if self.hint_config(constants.REQUIRE_NEARBY_SSIDS):
             if not self.is_location_using_nearby_ssids():
                 raise errors.NearbySSIDError("Failed finding the required nearby ssids")
 
@@ -257,7 +257,7 @@ class EthernetHint(NetworkHint):
     """ Subclass of NetworkHint that applies specifically to ethernet connectivity """
 
     def __init__(self, hint_config=constants.NETWORK_HINT_REQS):
-        NetworkHint.__init__(self, hint_config=requirements)
+        NetworkHint.__init__(self, hint_config=hint_config)
         self._hint_config = hint_config
 
     def network_check(self):
