@@ -4,8 +4,9 @@
 from unittest.mock import patch, MagicMock, PropertyMock
 
 import unittest
+import pytest
 
-from regioneer.core.hints import HintFactory, constants
+from regioneer.core.hints import HintFactory, constants, errors
 from regioneer.core.hints.LocalityHint import LocalityHint
 from regioneer.core.hints.NetworkHint import NetworkHint, WifiHint, EthernetHint
 from regioneer.core.hints.PhysicalHint import PhysicalHint
@@ -39,6 +40,17 @@ class TestLocationHint(unittest.TestCase):
 
 class TestWiFiHint(unittest.TestCase):
     """ Test the subclassed WiFiHint """
+
+    def test_get_device(self):
+        """ Get the network device """
+
+        # Test Retrieval
+        wifi_hint = WifiHint(hint_config=TEST_WIFI_REQS)
+        self.assertTrue(wifi_hint.net_device == "wlp1s0")
+
+        # Test Setting and Retrieval
+        wifi_hint.net_device = "eth0"
+        self.assertTrue(wifi_hint.net_device == "eth0")
 
     def test_get_ssid(self):
         """" Test getting the ssid for a given device. """
@@ -241,6 +253,56 @@ class TestWiFiHint(unittest.TestCase):
 
         self.assertTrue(wifi_hint.valid_hint_config())
         self.assertTrue(wifi_hint.is_location_using_nearby_ssids())
+
+    def test_network_check(self):
+        """ Test the network check method """
+
+        wifi_hint_config = {
+            constants.REQUIREMENTS: {
+                constants.NET_DEVICE: constants.DEVICE_TYPE,
+                constants.DEVICE_TYPE: constants.NET_DEVICE,
+                constants.CONNECTED_SSID: constants.NET_DEVICE,
+            },
+
+            constants.OPTIONAL: {
+                constants.REQUIRE_NEARBY_SSIDS: constants.NEARBY_SSIDS
+            },
+
+            constants.NET_DEVICE: TEST_WIFI_DEVICE,
+            constants.DEVICE_TYPE: WIFI,
+            constants.REQUIRE_CONNECTED_SSID: True,
+            constants.CONNECTED_SSID: TEST_WIFI_SSID,
+            constants.REQUIRE_NEARBY_SSIDS: True,
+            constants.NEARBY_SSIDS: TEST_SURROUNDING_SSIDS
+        }
+
+        # Test Retrieval
+        wifi_hint = WifiHint(hint_config=wifi_hint_config)
+
+        if OFFLINE_TEST:
+            wifi_hint.is_location_using_ssid = MagicMock()
+            wifi_hint.is_location_using_ssid.return_value = True
+            wifi_hint.is_location_using_nearby_ssids = MagicMock()
+            wifi_hint.is_location_using_nearby_ssids.return_value = True
+
+        self.assertTrue(wifi_hint.network_check())
+
+        # Test error scenario
+        wifi_hint.valid_hint_config = MagicMock()
+        wifi_hint.valid_hint_config.return_value = False
+
+        with pytest.raises(errors.InvalidNetworkConfig):
+            wifi_hint.network_check()
+
+        wifi_hint.valid_hint_config.return_value = True
+        wifi_hint.is_location_using_ssid.return_value = False
+        with pytest.raises(errors.SSIDNotFound):
+            wifi_hint.network_check()
+
+        wifi_hint.is_location_using_ssid.return_value = True
+        wifi_hint.is_location_using_nearby_ssids.return_value = False
+        with pytest.raises(errors.NearbySSIDError):
+            wifi_hint.network_check()
 
 
 class TestEthernetHint(unittest.TestCase):

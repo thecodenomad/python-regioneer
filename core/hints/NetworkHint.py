@@ -175,11 +175,11 @@ class WifiHint(NetworkHint):
         # By itself a WifiHint MUST have a connected ssid, but in conjunction with another hint, say ethernet,
         # then it might not be required
         if self.hint_config[constants.REQUIRE_CONNECTED_SSID]:
-            if self.is_location_using_ssid():
+            if not self.is_location_using_ssid():
                 raise errors.SSIDNotFound("Not connected to: {}".format(self.hint_ssid))
 
         # Check if nearby ssids are required
-        if self.hint_config(constants.REQUIRE_NEARBY_SSIDS):
+        if self.hint_config[constants.REQUIRE_NEARBY_SSIDS]:
             if not self.is_location_using_nearby_ssids():
                 raise errors.NearbySSIDError("Failed finding the required nearby ssids")
 
