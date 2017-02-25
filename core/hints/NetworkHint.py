@@ -73,10 +73,7 @@ class NetworkHint(LocationHint):
         """
         pass
 
-    def _check_output(self, opts):
-        """ Meant as  a wrapper around subprocess to make mocking easy """
-        return check_output(opts).decode('utf-8')
-
+    @abstractmethod
     def is_location(self):
         """ Issues all network related checks to determine if the location matches the hint
 
@@ -84,8 +81,11 @@ class NetworkHint(LocationHint):
             True if successful, False otherwise
 
         """
+        pass
 
-        return self.network_check()
+    def _check_output(self, opts):
+        """ Meant as  a wrapper around subprocess to make mocking easy """
+        return check_output(opts).decode('utf-8')
 
     def check_server_existence(self, host, port):
         """ Check a public server for its existence.
@@ -131,21 +131,38 @@ class WifiHint(NetworkHint):
         surrounding ssids."""
         return self._ssid_threshold
 
+    def is_location(self):
+        """ Issues all network related checks to determine if the location matches the hint
+
+        Returns:
+            True if successful, False otherwise
+
+        """
+        try:
+            return self.network_check()
+        except errors.SSIDNotFound:
+            print("Failed to find ssid: {}".format(self.hint_ssid))
+            return False
+        except errors.NearbySSIDError:
+            print("Failed to find nearby ssids: {}".format(self.hint_ssids))
+            return False
+
     def valid_hint_config(self):
         """ Checks the passed in config to determine if they are valid """
 
         reqs = self.hint_config[constants.REQUIREMENTS]
-        ops  = self.hint_config[constants.OPTIONAL]
+        ops  = self.hint_config.get(constants.OPTIONAL, {})
 
         # If the required key or its value in the config is none then fail
+        print("Checking that the following reqs are valid: {}".format(reqs.keys()))
         for key, req in reqs.items():
             if not self.hint_config.get(key):
                 print("Failed on key: {}".format(key))
                 return False
 
-            if not self.hint_config.get(req):
-                print("Failed on req: {}".format(req))
-                return False
+            # if not self.hint_config.get(req):
+            #     print("Failed on req: {}".format(req))
+            #     return False
 
         for key, req in ops.items():
 
@@ -178,12 +195,12 @@ class WifiHint(NetworkHint):
         # Check if connected ssid is required
         # By itself a WifiHint MUST have a connected ssid, but in conjunction with another hint, say ethernet,
         # then it might not be required
-        if self.hint_config[constants.REQUIRE_CONNECTED_SSID]:
+        if self.hint_config.get(constants.REQUIRE_CONNECTED_SSID):
             if not self.is_location_using_ssid():
                 raise errors.SSIDNotFound("Not connected to: {}".format(self.hint_ssid))
 
         # Check if nearby ssids are required
-        if self.hint_config[constants.REQUIRE_NEARBY_SSIDS]:
+        if self.hint_config.get(constants.REQUIRE_NEARBY_SSIDS):
             if not self.is_location_using_nearby_ssids():
                 raise errors.NearbySSIDError("Failed finding the required nearby ssids")
 

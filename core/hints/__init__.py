@@ -28,7 +28,7 @@ from socket import socket
 from regioneer.core.hints import constants
 
 from regioneer.core.hints.LocalityHint import LocalityHint
-from regioneer.core.hints.NetworkHint import NetworkHint
+from regioneer.core.hints.NetworkHint import NetworkHint, WifiHint
 from regioneer.core.hints.PhysicalHint import PhysicalHint
 
 
@@ -40,7 +40,13 @@ class HintFactory(object):
         if hint_type == constants.LOCALITY:
             return LocalityHint(requirements)
         if hint_type == constants.NETWORK:
-            return NetworkHint(requirements)
+            print("Creating network hint...")
+            if requirements['device_type'] == "wifi":
+                return WifiHint(requirements)
+            elif requirements['device_type'] == "ethernet":
+                return EthernetHint(requirements)
+            else:
+                return NetworkHint(requirements)
         if hint_type == constants.PHYSICAL:
             return PhysicalHint(requirements)
 

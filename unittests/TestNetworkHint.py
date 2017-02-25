@@ -323,3 +323,20 @@ class TestEthernetHint(unittest.TestCase):
     def test_network_check(self):
         """ Test the implementation of the NetworkHint abstract method """
 
+
+
+[
+     {
+       "requirements": {
+          "device": "wlp1s0",
+          "device_type": "wifi",
+          "connected_ssid": "pizza_is_good"
+       },
+       "require_connected_ssid": true,
+       "hint_type": "network",
+       "ephemeral": false,
+       "device": "wlp1s0",
+       "device_type": "wifi",
+       "connected_ssid": "pizza_is_good"
+     }
+]

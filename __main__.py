@@ -6,6 +6,8 @@ import os
 from pprint import pprint
 import sys
 
+from subprocess import check_output
+
 from regioneer.core import constants
 from regioneer.core.models import load_models_from_configuration
 
@@ -24,11 +26,7 @@ def load_configuration_file(loc):
 
     if os.path.exists(loc):
         with open(loc, 'r') as infile:
-            print(infile)
             conf = json.load(infile)
-            print("Found a config")
-            pprint(conf)
-            print("Trying to load configuration...")
             return load_models_from_configuration(conf)
 
     # Else Create simple configuration file
@@ -62,6 +60,14 @@ if __name__ == "__main__":
         if profile.is_active():
             guessed_profiles.append(profile)
 
-    print("Guessed the following active profiles: ")
+    print("Guessed the following active profiles: {}".format([p.name for p in guessed_profiles]))
     for profile in guessed_profiles:
-        print("{}".format(profile.name()))
+        print("Profile '{}' requires executing: \"{}\"".format(profile.name, profile.executable))
+
+        # Subprocess requires and array
+        executable = profile.executable
+        opts = executable.split()
+        output = check_output(opts).decode('utf-8')
+        print("Output from execution: {}".format(output))
+
+

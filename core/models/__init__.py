@@ -15,11 +15,12 @@ def load_models_from_configuration(conf):
 
     profiles = []
 
-    for name, hints in conf.items():
+    for name, config in conf.items():
 
         # Setup a blank profile
-        print("Found profile: '{}'".format(name))
-        profile = Profile(name, hints=[])
+        hints = config['hints']
+        executable = config['excecutable']
+        profile = Profile(name, executable, hints=[])
 
         for hint in hints:
             location_hint = HintFactory.factory(hint[constants.HINT_TYPE], hint)
@@ -33,10 +34,16 @@ def load_models_from_configuration(conf):
 class Profile(object):
     """ Profile object that stores the configuration settings for a given regioneer profile. """
 
-    def __init__(self, name, hints=None):
+    def __init__(self, name, executable, hints=None):
         """ Initialize """
         self._name = name
+        self._executable = executable
         self._hints = hints or []
+
+    @property
+    def executable(self):
+        """ Return the command line to execute """
+        return self._executable
 
     @property
     def name(self):
@@ -66,3 +73,10 @@ class Profile(object):
 
         # Go through all the hints and check to see if they are active, if all of them are active then
         # we have an active profile
+        print("{}: There is {} hint(s) associated with this profile".format(self.name, len(self.hints)))
+        for hint in self.hints:
+            if hint.is_location():
+                return True
+
+        print("Regioneer determined '{}' isn't the correct profile based on hints".format(self.name))
+        return False
