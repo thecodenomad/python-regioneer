@@ -18,6 +18,7 @@ def load_models_from_configuration(conf):
     for name, hints in conf.items():
 
         # Setup a blank profile
+        print("Found profile: '{}'".format(name))
         profile = Profile(name, hints=[])
 
         for hint in hints:

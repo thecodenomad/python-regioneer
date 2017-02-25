@@ -3,6 +3,7 @@
 
 import json
 import os
+from pprint import pprint
 import sys
 
 from regioneer.core import constants
@@ -16,14 +17,23 @@ def load_configuration_file(loc):
         sys.exit(1)
 
     # Load configuration file if exist
+
+    loc = os.path.expandvars(loc)
+
+    print("Looking for configuration file at: {}".format(loc))
+
     if os.path.exists(loc):
         with open(loc, 'r') as infile:
-            conf = json.loads(infile)
+            print(infile)
+            conf = json.load(infile)
+            print("Found a config")
+            pprint(conf)
+            print("Trying to load configuration...")
             return load_models_from_configuration(conf)
 
     # Else Create simple configuration file
     else:
-        # TODO: when a configuration file doesn't alrady exist copy over the base configuration
+        # TODO: when a configuration file doesn't already exist copy over the base configuration
         pass
 
 if __name__ == "__main__":
@@ -45,7 +55,10 @@ if __name__ == "__main__":
     profiles = load_configuration_file(conf_loc)
 
     guessed_profiles = []
+
+    # These should be profile objects at this point
     for profile in profiles:
+        print("Checking to see if {} is the active profile".format(profile.name))
         if profile.is_active():
             guessed_profiles.append(profile)
 
