@@ -5,7 +5,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 # Regioneer imports
-from regioneer.core.hints import ping_check
+from regioneer.core.utils.networking import ping_check
 
 PUBLIC_HOST = "www.google.com"
 PRIVATE_HOST = "192.168.10.1"

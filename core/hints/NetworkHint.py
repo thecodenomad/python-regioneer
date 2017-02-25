@@ -73,6 +73,10 @@ class NetworkHint(LocationHint):
         """
         pass
 
+    def _check_output(self, opts):
+        """ Meant as  a wrapper around subprocess to make mocking easy """
+        return check_output(opts).decode('utf-8')
+
     def is_location(self):
         """ Issues all network related checks to determine if the location matches the hint
 
@@ -197,7 +201,7 @@ class WifiHint(NetworkHint):
         ssid = "WiFi not Found"
 
         opts = ['nmcli', '-f', 'IN-USE,SSID,CHAN,SIGNAL', 'dev', 'wifi', 'list']
-        output = check_output(opts).decode('utf-8')
+        output = self._check_output(opts)
         output = output.split('\n')
 
         for line in output:
@@ -216,7 +220,7 @@ class WifiHint(NetworkHint):
         all_ssids = []
 
         opts = ['nmcli', '-f', 'SSID', 'dev', 'wifi', 'list']
-        output = check_output(opts).decode('utf-8')
+        output = self._check_output(opts)
         output = output.split('\n')
 
         for line in output:
@@ -224,9 +228,17 @@ class WifiHint(NetworkHint):
             if not ssid:
                 continue
 
-            # TODO: We should recored channel and signal so we can keep same-named ssids
+            # Should be the very first element unless it's an * in which case that's the connected SSID
+            ssid = ssid.split()
+            if ssid[0] == '*':
+                ssid = ssid[1]
+            else:
+                ssid = ssid[0]
+
+            # TODO: We should record channel and signal so we can keep same-named ssids
             # within the list
             if ssid not in ["SSID", self.ssid] and ssid not in all_ssids:
+                print("Adding: '{}' to list of surrounding ssids".format(ssid))
                 all_ssids.append( ssid )
 
         return all_ssids

@@ -62,3 +62,14 @@ TEST_WIFI_REQS = {
     NEARBY_SSIDS: TEST_SURROUNDING_SSIDS
 }
 
+TEST_NMCLI_OUTPUT =  """   pizza_is_good_slower             6     82
+                        *  pizza_is_good                    44    56
+                           DencoHome                        3     49
+                           xfinitywifi                      1     40"""
+
+TEST_SURROUNDING_LIST = [    'pizza_is_good_slower',
+                             'pizza_is_good',
+                             'DencoHome',
+                             'xfinitywifi'
+                        ]
+

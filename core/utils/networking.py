@@ -10,6 +10,8 @@
     :license: Apache 2.0, see LICENSE for more details
 """
 
+from socket import socket
+
 def ping_check(host, port=None):
     """ Check to see if the given host is pingable. If a port is specified, instead of an ICMP request,
     a socket connection will be attempted.

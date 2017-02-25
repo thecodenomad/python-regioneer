@@ -13,7 +13,8 @@ from regioneer.core.hints.PhysicalHint import PhysicalHint
 
 from regioneer.unittests.constants import TEST_WIFI_REQS, TEST_ETHERNET_REQS, TEST_WIFI_SSID, \
                                           TEST_SURROUNDING_SSIDS, TEST_CONNECTED_SSID, OFFLINE_TEST, \
-                                          TEST_WIFI_DEVICE, TEST_ETH_DEVICE, WIFI, ETHERNET
+                                          TEST_WIFI_DEVICE, TEST_ETH_DEVICE, WIFI, ETHERNET, TEST_NMCLI_OUTPUT, \
+                                          TEST_SURROUNDING_LIST
 
 
 class TestLocationHint(unittest.TestCase):
@@ -146,13 +147,17 @@ class TestWiFiHint(unittest.TestCase):
         wifi_hint._hint_ssid = "--!BEEFCAKE!--"
         self.assertFalse(wifi_hint.is_location_using_ssid())
 
+        # Test returning specialized check_output
+        wifi_hint = WifiHint(hint_config=TEST_WIFI_REQS)
+        wifi_hint.check_output = MagicMock()
+        wifi_hint.check_output.return_value = TEST_NMCLI_OUTPUT
+        self.assertTrue(wifi_hint.get_connected_ssid() == "pizza_is_good")
 
     # TODO:
     # Need to create unittests to test whether computer is in a given location for wifi settings
     # Connected SSID is required
-
     def test_hint_config(self):
-        """ Test if in the right locatoin based on the connected ssid """
+        """ Test if in the right location based on the connected ssid """
 
         wifi_hint_config = {
             constants.REQUIREMENTS: {
@@ -188,6 +193,13 @@ class TestWiFiHint(unittest.TestCase):
         wifi_hint_config[constants.NEARBY_SSIDS] = []
         wifi_hint = WifiHint(hint_config=wifi_hint_config)
         self.assertFalse(wifi_hint.valid_hint_config())
+
+        # Test returning specialized check_output
+        wifi_hint = WifiHint(hint_config=TEST_WIFI_REQS)
+        wifi_hint._check_output = MagicMock()
+        wifi_hint._check_output.return_value = TEST_NMCLI_OUTPUT
+
+        self.assertEqual(set(wifi_hint.get_surrounding_ssids()), set(TEST_SURROUNDING_LIST))
 
 
     def test_is_location_connected_ssid(self):
