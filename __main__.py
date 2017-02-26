@@ -5,6 +5,7 @@ import json
 import os
 from pprint import pprint
 import sys
+from textwrap import indent
 
 from subprocess import check_output
 
@@ -62,12 +63,12 @@ if __name__ == "__main__":
 
     print("Guessed the following active profiles: {}".format([p.name for p in guessed_profiles]))
     for profile in guessed_profiles:
-        print("Profile '{}' requires executing: \"{}\"".format(profile.name, profile.executable))
+        print("Profile '{}' requires executing: \"{}\":".format(profile.name, profile.executable))
 
         # Subprocess requires and array
         executable = profile.executable
         opts = executable.split()
         output = check_output(opts).decode('utf-8')
-        print("Output from execution: {}".format(output))
+        print("{}".format(indent(output, prefix="  ")))
 
 
