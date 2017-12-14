@@ -63,6 +63,33 @@
                     height: dp(25)
                     text: "status bar <should be an image>"
 
+<Row@BoxLayout>:
+    canvas.before:
+        Color:
+            rgba: 0.3, 0.3, 0.3, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    value: ''
+    orientation: 'horizontal'
+    CheckBox:
+        size_hint: 0.50, 1
+        state: 'down'
+        size_hint_x: None
+        width: dp(100)
+    GridLayout:
+        cols: 2
+        GridLayout:
+            rows: 2
+            Label:
+                text: "Wifi Strength"
+            ProgressBar:
+                value: 50
+                max: 100
+        Label:
+            text: "Wifi SSID X"
+            halign: 'center'
+
 <AddHintPopup>:
     auto_dismiss: False
     title: 'Add New Hint'
@@ -101,9 +128,51 @@
 
             TabbedPanelItem:
                 text: "Network"
+                GridLayout:
+                    rows: 2
+                    spacing: dp(5)
+                    padding: dp(5)
+                    GridLayout:
+                        cols: 2
+                        Label:
+                            text: "Select Default Wifi Network"
+                        WifiRecycleView:
+                            viewclass: "Row"
+                            RecycleBoxLayout:
+                                default_size: None, dp(56)
+                                default_size_hint: 1, None
+                                size_hint_y: None
+                                height: self.minimum_height
+                                orientation: 'vertical'
+                                spacing: dp(2)
+                    GridLayout:
+                        cols: 2
+                        Label:
+                            text: "Select Surrounding Wifi Networks"
+                        WifiRecycleView:
+                            viewclass: "Row"
+                            RecycleBoxLayout:
+                                default_size: None, dp(56)
+                                default_size_hint: 1, None
+                                size_hint_y: None
+                                height: self.minimum_height
+                                orientation: 'vertical'
+                                spacing: dp(2)
 
             TabbedPanelItem:
                 text: "Physical"
+                GridLayout:
+                    cols: 2
+                    Label:
+                        text: "Select Hardware IDs"
+                    WifiRecycleView:
+                        viewclass: "Label"
+                        RecycleBoxLayout:
+                            default_size: None, dp(56)
+                            default_size_hint: 1, None
+                            size_hint_y: None
+                            height: self.minimum_height
+                            orientation: 'vertical'
 
         GridLayout:
             cols: 2

@@ -8,9 +8,16 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
 from kivy.uix.button import Button
 from kivy.uix.checkbox import CheckBox
+from kivy.uix.recycleview import RecycleView
 
 # Disabled imports
 # from kivy.uix.button import Label
+
+
+class WifiRecycleView(RecycleView):
+    def __init__(self, **kwargs):
+        super(WifiRecycleView, self).__init__(**kwargs)
+        self.data = [{'text': str(x)} for x in range(10)]
 
 
 class HintAddButton(Button):
