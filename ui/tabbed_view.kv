@@ -1,0 +1,55 @@
+<WifiRow@BoxLayout>:
+    canvas.before:
+        Color:
+            rgba: 0.2, 0.2, 0.2, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    value: ''
+    Label:
+        text: "Hint {}".format(root.value)
+
+<NetworkHintTab@BoxLayout>:
+    text: "Network"
+    id: network_hint_tab
+    GridLayout:
+        rows: 2
+        spacing: dp(5)
+        padding: dp(5)
+        GridLayout:
+            cols: 2
+            Label:
+                text: "Select Default Wifi Network"
+            RecycleView:
+                id: default_network_view
+                scroll_type: ['bars', 'content']
+                scroll_wheel_distance: dp(114)
+                bar_width: dp(10)
+                viewclass: 'WifiRow'
+                data: [{'value': str(x)} for x in range(10)]
+                RecycleBoxLayout:
+                    default_size: None, dp(56)
+                    default_size_hint: 1, None
+                    size_hint_y: None
+                    height: self.minimum_height
+                    orientation: 'vertical'
+                    spacing: dp(2)
+        GridLayout:
+            cols: 2
+            Label:
+                text: "Select Surrounding Wifi Networks"
+            RecycleView:
+                id: surrounding_network_view
+                scroll_type: ['bars', 'content']
+                scroll_wheel_distance: dp(114)
+                bar_width: dp(10)
+                viewclass: 'WifiRow'
+                data: [{'text': str(x)} for x in range(10)]
+                RecycleBoxLayout:
+                    default_size: None, dp(56)
+                    default_size_hint: 1, None
+                    size_hint_y: None
+                    height: self.minimum_height
+                    orientation: 'vertical'
+                    spacing: dp(2)

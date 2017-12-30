@@ -1,64 +1,26 @@
 <MainUI@Screen>:
-    cols: 2
     GridLayout:
         cols: 2
-        GridLayout:
-            rows: 2
-            RecycleView:
-                id: rv
-                scroll_type: ['bars', 'content']
-                scroll_wheel_distance: dp(114)
-                bar_width: dp(10)
-                viewclass: 'Row'
-            RecycleBoxLayout:
-                default_size: None, dp(56)
-                default_size_hint: 1, None
-                size_hint_y: None
-                height: self.minimum_height
-                orientation: 'vertical'
-                spacing: dp(2)
-        GridLayout:
-            rows: 3
-            RecycleView:
-                id: rv2
-                scroll_type: ['bars', 'content']
-                scroll_wheel_distance: dp(114)
-                bar_width: dp(10)
-                viewclass: 'Row'
+        LocationView:
+            size_hint_x: .25
+            id: loc_view
 
-            StackLayout:
-                padding: [dp(5),dp(0),dp(5),dp(0)]
+        GridLayout:
+            size_hint_x: .75
+            padding: 0,0,dp(10),0
+            rows: 4
+            Label:
                 size_hint_y: None
-                height: dp(25)
-                orientation: 'rl-tb'
-                Button:
-                    size_hint_x: None
-                    width: dp(50)
-                    text: "Clone"
-                Button:
-                    size_hint_x: None
-                    width: dp(50)
-                    text: "-"
-                Button:
-                    size_hint_x: None
-                    width: dp(50)
-                    text: "+"
-                    on_press: root.manager.current = 'AddClue'
+                height: dp(30)
+                text: "Verifiable Hints"
 
-            GridLayout:
-                rows: 3
-                padding: [dp(5),dp(5),dp(5),dp(5)]
-                GridLayout:
-                    cols: 2
-                    size_hint_y: None
-                    height: dp(25)
-                    Button:
-                        text: "Desktop Settings"
-                    Button:
-                        text: "Custom Scripts"
-                Label:
-                    text: "Status Output"
-                Label:
-                    size_hint_y: None
-                    height: dp(25)
-                    text: "status bar <should be an image>"
+            HintView:
+                id: hint_view
+
+            HintToolbar:
+                id: hint_toolbar
+                padding: 0,dp(5),0,0
+
+            ActionsView:
+                id: actions_view
+                padding: 0,dp(5),0,0

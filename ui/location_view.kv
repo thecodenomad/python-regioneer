@@ -1,0 +1,41 @@
+<LocationRow@BoxLayout>:
+    canvas.before:
+        Color:
+            rgba: 0.2, 0.2, 0.2, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    value: ''
+    Label:
+        text: "Location {}".format(root.value)
+
+<LocationView@GridLayout>
+    GridLayout:
+        width: root.width
+        height: root.height
+        padding: dp(10),0,dp(10),0
+        rows: 3
+        Label:
+            size_hint: 1, None
+            height: dp(30)
+            halign: 'center'
+            text: "Locations"
+
+        RecycleView:
+            scroll_type: ['bars', 'content']
+            scroll_wheel_distance: dp(114)
+            bar_width: dp(5)
+            viewclass: 'LocationRow'
+            data: [{'value': str(x)} for x in range(20)]
+            RecycleBoxLayout:
+                default_size: None, dp(56)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+                spacing: dp(2)
+
+        LocationToolbar:
+            id: location_tool_bar
+            size_hint: 1, None
+            height: dp(30)

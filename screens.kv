@@ -1,0 +1,69 @@
+<AddClueScreen>:
+    GridLayout:
+        rows: 2
+        TabbedPanel:
+            id: 'hint_tabbed_panel'
+            do_default_tab: False
+            tab_pos: 'top_mid'
+
+            TabbedPanelItem:
+                text: "GPS"
+                Label:
+                    text: "First Tab Content"
+
+            TabbedPanelItem:
+                text: "Network"
+                NetworkHintTab:
+                    id: _network_hint_tab
+
+            TabbedPanelItem:
+                text: "Physical"
+                Label:
+                    text: "Physical Content"
+        GridLayout:
+            cols: 2
+            size_hint_y: None
+            height: dp(25)
+            Button:
+                text: 'Cancel'
+                on_press: app.manager.current = "MainUI"
+            Button:
+                disabled: True
+                text: 'Ok'
+
+
+<AddHintScreen>:
+    Button:
+        text: "Goto Main Screen"
+        on_press: root.manager.current = 'MainUI'
+
+<Manager>:
+    id: screen_manager
+
+    main_ui:  main_ui
+    add_clue: add_clue
+    add_hint: add_hint
+
+    canvas.before:
+        Color:
+            rgba: 0.15, 0.15, 0.15, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    MainUI:
+        id: main_ui
+        name: 'MainUI'
+        manager: screen_manager
+
+    AddClueScreen:
+        id: add_clue
+        name: "AddClue"
+        manager: screen_manager
+
+    AddHintScreen:
+        id: add_hint
+        name: "AddHint"
+        manager: screen_manager
+
+

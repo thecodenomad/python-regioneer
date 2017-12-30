@@ -1,0 +1,32 @@
+<LocationToolbar@BoxLayout>:
+    padding: [dp(0),dp(5),dp(0),dp(5)]
+    size_hint_y: None
+    default_size_hint: 1, None
+    height: dp(25)
+    orientation: 'horizontal'
+    Button:
+        text: "+"
+    Button:
+        text: "-"
+    Button:
+        text: "Clone"
+
+<HintToolbar@StackLayout>:
+    padding: [dp(5),dp(0),dp(5),dp(0)]
+    size_hint_y: None
+    default_size_hint: 1, None
+    height: dp(25)
+    orientation: 'rl-tb'
+    Button:
+        size_hint_x: None
+        width: dp(50)
+        text: "Clone"
+    Button:
+        size_hint_x: None
+        width: dp(50)
+        text: "-"
+    Button:
+        size_hint_x: None
+        width: dp(50)
+        text: "+"
+        on_press: app.manager.current = 'AddClue'
