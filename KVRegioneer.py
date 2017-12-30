@@ -1,3 +1,7 @@
+# Regioneer core imports
+from utils.threadpool import ThreadPool
+
+
 from kivy.app import App
 from kivy.factory import Factory
 from kivy.lang import Builder
@@ -8,6 +12,9 @@ from kivy.uix.screenmanager import ScreenManager, Screen, WipeTransition
 from kivy.properties import ObjectProperty
 
 from kivy.config import Config
+
+
+NUM_THREADS = 4
 
 # Set Default Window Size
 Config.set('graphics', 'width', '800')
@@ -41,6 +48,7 @@ class KVRegioneer(App):
         super(KVRegioneer, self).__init__()
 
         # Main Elements of application
+        self.tp = ThreadPool(NUM_THREADS)
 
         # This is where the user will add/remove Locations
         self.LocationSelector = None
@@ -68,6 +76,14 @@ class KVRegioneer(App):
         #       - xfce                                                                                                 #
         ################################################################################################################
         self.DesktopSettingsPopUp = None
+
+    def _reset_threadpool(self, num_threads=NUM_THREADS):
+        """ Re-establish a fresh threadpool. """
+
+        if not self.tp.shutdown:
+            self.tp.wait_and_shutdown()
+
+        self.tp = ThreadPool(num_threads)
 
     def build(self):
         """ Build the UI for the application. """

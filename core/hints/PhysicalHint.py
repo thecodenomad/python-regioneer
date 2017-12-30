@@ -11,7 +11,7 @@
     :license: MIT, see LICENSE for more details
 """
 
-from regioneer.core.hints.abstractions import LocationHint
+from core.hints.abstractions import LocationHint
 
 
 class PhysicalHint(LocationHint):
@@ -20,7 +20,7 @@ class PhysicalHint(LocationHint):
     """
 
     def __init__(self, requirements):
-        LocationHint.__init__(self)
+        super(PhysicalHint, self).__init__()
         self.requirements = requirements
 
     def is_location(self):

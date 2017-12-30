@@ -32,9 +32,9 @@ import re
 
 from abc import abstractmethod
 
-from regioneer.core.hints import constants, errors
-from regioneer.core.hints.abstractions import LocationHint
-from regioneer.core.utils import networking
+from core.hints import constants, errors
+from core.hints.abstractions import LocationHint
+from core.utils import networking
 
 from subprocess import check_output
 
@@ -43,7 +43,7 @@ class NetworkHint(LocationHint):
     """ This is a subclass of the LocationHint that determines a location based on network based requirements. """
 
     def __init__(self, hint_config=constants.NETWORK_HINT_REQS):
-        LocationHint.__init__(self)
+        super(NetworkHint, self).__init__()
         self._net_device = hint_config[constants.NET_DEVICE]
         self._device_type = hint_config[constants.DEVICE_TYPE]
         self._hint_config = hint_config
