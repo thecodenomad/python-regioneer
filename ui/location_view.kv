@@ -1,3 +1,19 @@
+<LocationToolbar>:
+    padding: [dp(0),dp(5),dp(0),dp(5)]
+    size_hint_y: None
+    default_size_hint: 1, None
+    height: dp(25)
+    orientation: 'horizontal'
+    Button:
+        text: "+"
+        on_press: root.add_profile()
+    Button:
+        text: "-"
+        on_press: root.add_profile()
+    Button:
+        text: "Clone"
+        on_press: root.add_profile()
+
 <LocationRow@BoxLayout>:
     canvas.before:
         Color:
@@ -6,10 +22,14 @@
             size: self.size
             pos: self.pos
     value: ''
-    Label:
-        text: "Location {}".format(root.value)
+    GridLayout:
+        cols: 2
+        Label:
+            text: "Location {}".format("name")
+        Label:
+            text: "Active: {}".format("blah")
 
-<LocationView@GridLayout>
+<LocationView@GridLayout>:
     GridLayout:
         width: root.width
         height: root.height
@@ -22,11 +42,11 @@
             text: "Locations"
 
         RecycleView:
+            id: loc_profiles
             scroll_type: ['bars', 'content']
             scroll_wheel_distance: dp(114)
             bar_width: dp(5)
             viewclass: 'LocationRow'
-            data: [{'value': str(x)} for x in range(20)]
             RecycleBoxLayout:
                 default_size: None, dp(56)
                 default_size_hint: 1, None

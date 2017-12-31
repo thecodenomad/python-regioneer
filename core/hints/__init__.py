@@ -25,11 +25,11 @@
 
 from socket import socket
 
-from regioneer.core.hints import constants
+from core.hints import constants
 
-from regioneer.core.hints.LocalityHint import LocalityHint
-from regioneer.core.hints.NetworkHint import NetworkHint, WifiHint
-from regioneer.core.hints.PhysicalHint import PhysicalHint
+from core.hints.LocalityHint import LocalityHint
+from core.hints.NetworkHint import NetworkHint, WifiHint
+from core.hints.PhysicalHint import PhysicalHint
 
 
 class HintFactory(object):

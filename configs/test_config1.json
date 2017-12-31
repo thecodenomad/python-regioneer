@@ -12,8 +12,8 @@
           "ephemeral": false,
           "net_device": "wlp1s0",
           "device_type": "wifi"
-          "public_servers": [("www.google.com", None)]
-          "private_servers": [("192.168.10.1", None)]
+          "public_servers": [("www.google.com", null)]
+          "private_servers": [("192.168.10.1", null)]
         }
       ]
     }
